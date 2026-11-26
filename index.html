@@ -98,9 +98,9 @@
         .promo-vip-card {
             position: relative;
             overflow: hidden;
-            background: linear-gradient(142deg, #362614 0%, #17120B 52%, #3A2915 100%);
-            border: 1.5px solid #E6C27A;
-            box-shadow: 0 14px 36px rgba(201, 160, 80, 0.20), inset 0 1px 0 rgba(245, 217, 150, 0.32);
+            background: linear-gradient(145deg, #5A4018 0%, #2B1E0C 46%, #4A3413 100%);
+            border: 1.5px solid #F5D996;
+            box-shadow: 0 16px 40px rgba(230, 194, 122, 0.26), inset 0 1px 0 rgba(255, 245, 219, 0.45);
         }
         .promo-vip-card::before {
             content: '';
@@ -428,7 +428,24 @@
                 </div>
 
                 <div id="portfolioFilters" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-3 sm:justify-center"></div>
-                <div id="portfolioGrid" class="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4"></div>
+                <div class="relative">
+                    <div id="portfolioGrid" class="flex gap-3 sm:gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-2 -mx-4 px-4 sm:mx-0 sm:px-0"></div>
+                </div>
+                <div id="portfolioCarouselNav" class="mt-3 flex flex-col items-center gap-1.5">
+                    <div class="flex items-center justify-center gap-3">
+                        <button type="button" id="portfolioPrevBtn" aria-label="Предыдущая работа"
+                            class="w-7 h-7 rounded-full border border-gold/35 bg-cardDark hover:bg-cardSoft text-goldLight text-xs flex items-center justify-center transition">
+                            ‹
+                        </button>
+                        <div id="portfolioDots" class="flex items-center justify-center gap-1.5 max-w-[200px] overflow-hidden"></div>
+                        <span id="portfolioCounter" class="text-[11px] font-semibold text-goldLight tabular-nums">1 / 1</span>
+                        <button type="button" id="portfolioNextBtn" aria-label="Следующая работа"
+                            class="w-7 h-7 rounded-full border border-gold/35 bg-cardDark hover:bg-cardSoft text-goldLight text-xs flex items-center justify-center transition">
+                            ›
+                        </button>
+                    </div>
+                    <span class="text-[10px] uppercase tracking-[0.16em] text-muted/75">— ЛИСТАЙТЕ ВЛЕВО-ВПРАВО —</span>
+                </div>
             </section>
 
             <div class="flex items-center justify-center gap-3 my-2">
@@ -445,7 +462,7 @@
                     <h2 class="font-serif text-3xl sm:text-4xl font-semibold text-goldLight">
                         Прайс-лист
                     </h2>
-                    <p class="text-xs text-muted mt-1">Нажмите на услугу, чтобы сразу подобрать свободное окошко</p>
+                    <p class="text-xs text-muted mt-1">Нажмите на услугу или «+», чтобы сразу добавить её в запись</p>
                 </div>
 
                 <div id="priceCategoryTabs" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-4 sm:justify-center"></div>
@@ -483,23 +500,25 @@
                         </button>
                     </div>
 
-                    <!-- Шаг 1: Услуга -->
+                    <!-- Шаг 1: Выбор раздела и добавление одной или нескольких услуг кнопками -->
                     <div>
-                        <label for="bookingServiceSelect" class="text-xs font-semibold uppercase tracking-[0.14em] text-goldLight flex items-center gap-2 mb-2.5">
+                        <label class="text-xs font-semibold uppercase tracking-[0.14em] text-goldLight flex items-center gap-2 mb-2.5">
                             <span class="w-5 h-5 rounded-full bg-gold text-obsidian text-[11px] font-bold flex items-center justify-center">1</span>
-                            Выберите услугу
+                            Выберите услуги
                         </label>
-                        <select id="bookingServiceSelect"
-                            class="w-full px-4 py-3.5 rounded-2xl bg-obsidian border border-gold/35 focus:border-gold focus:outline-none text-sm text-ivory transition">
-                        </select>
-                        <div id="bookingServiceMeta" class="mt-2 flex flex-wrap items-center justify-between gap-2 px-1 text-xs text-muted"></div>
+
+                        <div id="bookingCategoryButtons" class="flex flex-wrap gap-2 mb-3"></div>
+                        <div id="bookingServiceButtons" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+
+                        <div id="selectedServicesChips" class="mt-3 flex flex-wrap gap-2"></div>
+                        <div id="bookingServiceMeta" class="mt-2.5 px-3.5 py-2.5 rounded-2xl bg-obsidian/70 border border-gold/20 flex flex-wrap items-center justify-between gap-2 text-xs text-muted"></div>
                     </div>
 
-                    <!-- Шаг 2: Дата на 14 дней вперёд -->
+                    <!-- Шаг 2: Дата на месяц вперёд (30 дней) -->
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-[0.14em] text-goldLight flex items-center gap-2 mb-2.5">
                             <span class="w-5 h-5 rounded-full bg-gold text-obsidian text-[11px] font-bold flex items-center justify-center">2</span>
-                            Выберите дату (14 дней вперёд)
+                            Выберите дату (на месяц вперёд)
                         </label>
                         <div id="bookingDateStrip" class="flex gap-2 overflow-x-auto no-scrollbar pb-1.5 -mx-1 px-1"></div>
                     </div>
@@ -881,6 +900,56 @@
                             </button>
                         </div>
                     </div>
+
+                    <!-- Предновогодняя / праздничная автонаценка по датам -->
+                    <div class="glass-card rounded-3xl p-4 sm:p-5 space-y-4">
+                        <div class="flex items-center justify-between gap-2">
+                            <div>
+                                <h3 class="font-serif text-2xl text-goldLight">Предновогодняя автонаценка по датам</h3>
+                                <p class="text-xs text-muted mt-0.5">Автоматически пересчитывает цену на выбранные даты в записи</p>
+                            </div>
+                            <label class="inline-flex items-center gap-2 cursor-pointer shrink-0">
+                                <input type="checkbox" id="cfgMarkupEnabled" class="w-4 h-4 accent-[#E6C27A]">
+                                <span class="text-xs font-semibold text-goldLight">Вкл.</span>
+                            </label>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            <div>
+                                <label class="block text-[11px] text-muted mb-1">С даты</label>
+                                <input type="date" id="cfgMarkupStart" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-gold/30 text-sm text-ivory">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] text-muted mb-1">По дату</label>
+                                <input type="date" id="cfgMarkupEnd" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-gold/30 text-sm text-ivory">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div>
+                                <label class="block text-[11px] text-muted mb-1">Формат наценки</label>
+                                <select id="cfgMarkupType" class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-gold/30 text-sm text-ivory">
+                                    <option value="percent">Процент (%)</option>
+                                    <option value="fixed">Сумма (₽)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] text-muted mb-1">Размер наценки</label>
+                                <input type="number" id="cfgMarkupValue" min="0" step="1" placeholder="15"
+                                    class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-gold/30 text-sm text-ivory">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] text-muted mb-1">Подпись тарифа</label>
+                            <input type="text" id="cfgMarkupLabel" placeholder="Предновогодний тариф"
+                                class="w-full px-3.5 py-2.5 rounded-xl bg-obsidian border border-gold/30 text-sm text-ivory">
+                        </div>
+
+                        <button type="button" onclick="saveHolidayMarkupConfig()" class="btn-gold w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-wider">
+                            Сохранить автонаценку
+                        </button>
+                    </div>
                 </div>
 
                 <!-- 3. ПРАЙС -->
@@ -974,9 +1043,15 @@
                             <input type="file" id="portFileInput" accept="image/*" class="hidden">
                         </label>
 
-                        <div id="portUploadPreviewWrap" class="hidden items-center gap-3 p-2.5 rounded-2xl bg-obsidian border border-gold/25">
-                            <img id="portUploadPreviewImg" alt="Предпросмотр" class="w-16 h-16 rounded-xl object-cover shrink-0">
-                            <span class="text-xs text-goldLight">Фото готово к публикации!</span>
+                        <div id="portUploadPreviewWrap" class="hidden items-center justify-between gap-3 p-2.5 rounded-2xl bg-obsidian border border-gold/25">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <img id="portUploadPreviewImg" alt="Предпросмотр" class="w-16 h-16 rounded-xl object-cover shrink-0 transition-transform duration-200">
+                                <span class="text-xs text-goldLight">Фото готово к публикации!</span>
+                            </div>
+                            <button type="button" onclick="rotatePendingPortfolioPhoto()"
+                                class="px-3 py-2 rounded-xl border border-gold/50 bg-cardSoft hover:bg-gold hover:text-obsidian text-goldLight text-xs font-semibold shrink-0 transition">
+                                ↻ 90°
+                            </button>
                         </div>
 
                         <button type="button" onclick="addPortfolioItem()" class="btn-gold w-full py-3 rounded-xl text-xs font-bold uppercase tracking-wider">
@@ -993,7 +1068,7 @@
                     <div id="adminReviewsList" class="space-y-2.5"></div>
                 </div>
 
-                <!-- 7. ШАПКА / ФОТО (ЧИСТЫЙ ИНТЕРФЕЙС БЕЗ ТЕХНИЧЕСКИХ ПОДПИСЕЙ И КНОПКИ СБРОСА) -->
+                <!-- 7. ШАПКА / ФОТО -->
                 <div id="adminTab-hero" class="admin-tab-panel hidden space-y-5">
                     <div class="glass-card rounded-3xl p-4 sm:p-5 space-y-4">
                         <div>
@@ -1096,7 +1171,7 @@
         // 1. КОНСТАНТЫ И СТАРТОВОЕ СОСТОЯНИЕ (КЛЮЧ bel_studio_v8)
         // =========================================================================
         const STORAGE_KEY = 'bel_studio_v8';
-        const DEFAULT_SYNC_URL = 'https://script.google.com/macros/s/AKfycbw4vo_5eXcQnLhklaiE7yDSAqMXQRaKuVS-5poECp0PTY8jnF02P5fD9knwxlXFFuc7/exec';
+        const DEFAULT_SYNC_URL = 'https://script.google.com/macros/s/AKfycbzrwMx0R_sfc7nXKK6tsH29F5XiBNnwrJoL718ojgLtt-0lIZDCbgQ1lZKfZNeTqT2vxg/exec';
 
         const WEEKDAYS_SHORT = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
         const MONTHS_GEN = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
@@ -1120,6 +1195,14 @@
                     step: 30,
                     workingDays: [1, 2, 3, 4, 5, 6], // Пн–Сб
                     overrides: {} // { 'YYYY-MM-DD': { dayOff: false, slots: ['10:00', '14:00'] } }
+                },
+                holidayMarkup: {
+                    enabled: false,
+                    startDate: '2026-12-20',
+                    endDate: '2026-12-31',
+                    type: 'percent', // 'percent' | 'fixed'
+                    value: 15,
+                    label: 'Предновогодний тариф'
                 },
                 services: [
                     // Перманентный макияж
@@ -1243,14 +1326,64 @@
         const ui = {
             portfolioFilter: 'Все работы',
             priceCategory: 'Все',
+            bookingCategory: 'Перманентный макияж',
+            selectedServiceIds: ['pm_1'],
             selectedServiceId: 'pm_1',
             selectedDate: '',
             selectedTime: '',
             selectedPromoText: '',
             reviewRating: 5,
             activeAdminTab: 'bookings',
-            pendingPortfolioImage: ''
+            pendingPortfolioImage: '',
+            pendingPortfolioRotation: 0
         };
+
+        function rotateDataUrl(dataUrl, deg, callback) {
+            const normalized = ((Number(deg) % 360) + 360) % 360;
+            if (!normalized) return callback(dataUrl);
+            const img = new Image();
+            img.onload = () => {
+                const rad = (normalized * Math.PI) / 180;
+                const swap = normalized === 90 || normalized === 270;
+                const canvas = document.createElement('canvas');
+                canvas.width = swap ? img.height : img.width;
+                canvas.height = swap ? img.width : img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.rotate(rad);
+                ctx.drawImage(img, -img.width / 2, -img.height / 2);
+                callback(canvas.toDataURL('image/jpeg', 0.82));
+            };
+            img.onerror = () => callback(dataUrl);
+            img.src = dataUrl;
+        }
+
+        function getMarkupForDate(isoDate) {
+            const m = appState.holidayMarkup;
+            if (!m || !m.enabled || !isoDate) return null;
+            const start = m.startDate || '';
+            const end = m.endDate || '';
+            if (start && isoDate < start) return null;
+            if (end && isoDate > end) return null;
+            const val = Number(m.value) || 0;
+            if (val <= 0) return null;
+            return {
+                type: m.type === 'fixed' ? 'fixed' : 'percent',
+                value: val,
+                label: (m.label || 'Предновогодний тариф').trim()
+            };
+        }
+
+        function getEffectivePrice(basePrice, isoDate) {
+            const p = Number(basePrice) || 0;
+            const mk = getMarkupForDate(isoDate);
+            if (!mk) return p;
+            if (mk.type === 'fixed') {
+                return Math.round(p + mk.value);
+            }
+            return Math.round(p * (1 + mk.value / 100));
+        }
+
         let lastCreatedBooking = null;
         let toastTimer = null;
 
@@ -1262,7 +1395,7 @@
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
+                .replace(/\"/g, '&quot;')
                 .replace(/'/g, '&#039;');
         }
 
@@ -1450,47 +1583,82 @@
             if (Array.isArray(incoming.bookings)) {
                 merged.bookings = incoming.bookings;
             }
+            if (incoming.holidayMarkup && typeof incoming.holidayMarkup === 'object') {
+                merged.holidayMarkup = {
+                    enabled: Boolean(incoming.holidayMarkup.enabled),
+                    startDate: typeof incoming.holidayMarkup.startDate === 'string' && incoming.holidayMarkup.startDate ? incoming.holidayMarkup.startDate : base.holidayMarkup.startDate,
+                    endDate: typeof incoming.holidayMarkup.endDate === 'string' && incoming.holidayMarkup.endDate ? incoming.holidayMarkup.endDate : base.holidayMarkup.endDate,
+                    type: incoming.holidayMarkup.type === 'fixed' ? 'fixed' : 'percent',
+                    value: typeof incoming.holidayMarkup.value === 'number' ? incoming.holidayMarkup.value : base.holidayMarkup.value,
+                    label: typeof incoming.holidayMarkup.label === 'string' && incoming.holidayMarkup.label.trim() ? incoming.holidayMarkup.label.trim() : base.holidayMarkup.label
+                };
+            }
 
             return merged;
         }
 
+        function getSafeStorage() {
+            try {
+                if (typeof window !== 'undefined' && window.localStorage) {
+                    const testKey = '__bel_ls_test__';
+                    window.localStorage.setItem(testKey, '1');
+                    window.localStorage.removeItem(testKey);
+                    return window.localStorage;
+                }
+            } catch (_) {}
+            return null;
+        }
+
         function loadLocalState() {
             const def = getDefaultState();
+            appState = def;
             try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                if (!raw) {
-                    appState = def;
-                    return;
-                }
+                const store = getSafeStorage();
+                if (!store) return;
+                const raw = store.getItem(STORAGE_KEY);
+                if (!raw) return;
                 const parsed = JSON.parse(raw);
                 appState = safeMergeState(def, parsed);
+                ensureNonEmptyCollections();
             } catch (_) {
-                appState = def;
+                appState = getDefaultState();
             }
         }
 
         function saveLocalState() {
             try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
-            } catch (_) {
-                // Если превышена квота localStorage при больших фото
-            }
+                const store = getSafeStorage();
+                if (!store) return;
+                store.setItem(STORAGE_KEY, JSON.stringify(appState));
+            } catch (_) {}
         }
 
         function getActiveSyncUrl() {
             return (appState.syncUrl || DEFAULT_SYNC_URL || '').trim();
         }
 
+        function fetchWithTimeout(url, options = {}, timeoutMs = 3500) {
+            if (typeof AbortController === 'undefined') {
+                return Promise.race([
+                    fetch(url, options),
+                    new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), timeoutMs))
+                ]);
+            }
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), timeoutMs);
+            return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(timer));
+        }
+
         // GET-запрос: безопасное слияние (никогда не затирает дефолтные массивы пустыми)
         async function fetchRemoteData(silent = true) {
             const url = getActiveSyncUrl();
-            if (!url) return false;
+            if (!url || typeof fetch !== 'function') return false;
             try {
                 const sep = url.includes('?') ? '&' : '?';
-                const res = await fetch(`${url}${sep}t=${Date.now()}`, {
+                const res = await fetchWithTimeout(`${url}${sep}t=${Date.now()}`, {
                     method: 'GET',
                     redirect: 'follow'
-                });
+                }, 3500);
                 if (!res.ok) throw new Error('HTTP ' + res.status);
                 const json = await res.json();
                 const remote = (json && json.data && typeof json.data === 'object') ? json.data : json;
@@ -1511,13 +1679,13 @@
         // POST-запрос (text/plain обходит CORS preflight в Google Apps Script)
         async function postToRemote(payload) {
             const url = getActiveSyncUrl();
-            if (!url) return false;
+            if (!url || typeof fetch !== 'function') return false;
             try {
-                await fetch(url, {
+                await fetchWithTimeout(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
-                });
+                }, 4000);
                 return true;
             } catch (_) {
                 return false;
@@ -1819,6 +1987,11 @@
             try {
                 const filtersWrap = document.getElementById('portfolioFilters');
                 const grid = document.getElementById('portfolioGrid');
+                const navWrap = document.getElementById('portfolioCarouselNav');
+                const dotsWrap = document.getElementById('portfolioDots');
+                const counterEl = document.getElementById('portfolioCounter');
+                const prevBtn = document.getElementById('portfolioPrevBtn');
+                const nextBtn = document.getElementById('portfolioNextBtn');
                 if (!filtersWrap || !grid) return;
 
                 filtersWrap.innerHTML = '';
@@ -1842,15 +2015,24 @@
                     : appState.portfolio.filter(p => p.category === ui.portfolioFilter);
 
                 grid.innerHTML = '';
+                grid.scrollLeft = 0;
+                if (dotsWrap) dotsWrap.innerHTML = '';
+
                 if (!items.length) {
-                    grid.innerHTML = `<div class="col-span-full glass-card rounded-3xl p-6 text-center text-xs text-muted">В этой категории пока нет работ</div>`;
+                    grid.innerHTML = `<div class="glass-card rounded-3xl p-6 text-center text-xs text-muted w-full">В этой категории пока нет работ</div>`;
+                    if (navWrap) navWrap.classList.add('hidden');
                     return;
                 }
 
-                items.forEach(item => {
+                if (navWrap) navWrap.classList.toggle('hidden', items.length <= 1);
+                if (counterEl) counterEl.textContent = `1 / ${items.length}`;
+
+                const maxDots = Math.min(items.length, 7);
+
+                items.forEach((item, idx) => {
                     const card = document.createElement('button');
                     card.type = 'button';
-                    card.className = 'glass-card group rounded-2xl overflow-hidden text-left flex flex-col hover:border-gold/70 transition';
+                    card.className = 'glass-card group snap-center shrink-0 w-[64%] sm:w-[260px] rounded-2xl overflow-hidden text-left flex flex-col hover:border-gold/70 transition';
 
                     const hasPhoto = Boolean(item.image && item.image.length > 10);
                     const mediaHtml = hasPhoto
@@ -1875,7 +2057,71 @@
                     `;
                     card.addEventListener('click', () => openLightbox(item));
                     grid.appendChild(card);
+
+                    if (dotsWrap && idx < maxDots) {
+                        const dot = document.createElement('button');
+                        dot.type = 'button';
+                        dot.setAttribute('aria-label', `Работа ${idx + 1}`);
+                        dot.className = idx === 0
+                            ? 'port-dot h-2 w-5 rounded-full bg-gold transition-all duration-300'
+                            : 'port-dot h-2 w-2 rounded-full bg-gold/30 transition-all duration-300';
+                        dot.addEventListener('click', () => {
+                            card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                        });
+                        dotsWrap.appendChild(dot);
+                    }
                 });
+
+                let currentIdx = 0;
+                const updateCarouselIndicator = () => {
+                    const cards = grid.querySelectorAll('button.snap-center');
+                    if (!cards.length) return;
+                    const center = grid.scrollLeft + grid.clientWidth / 2;
+                    let closest = 0;
+                    let minDist = Infinity;
+                    cards.forEach((c, i) => {
+                        const cCenter = c.offsetLeft + c.offsetWidth / 2;
+                        const dist = Math.abs(center - cCenter);
+                        if (dist < minDist) {
+                            minDist = dist;
+                            closest = i;
+                        }
+                    });
+                    currentIdx = closest;
+                    if (counterEl) counterEl.textContent = `${closest + 1} / ${cards.length}`;
+                    if (dotsWrap) {
+                        const dots = dotsWrap.querySelectorAll('.port-dot');
+                        const activeDot = dots.length ? (closest % dots.length) : 0;
+                        dots.forEach((d, i) => {
+                            if (i === activeDot) {
+                                d.classList.add('w-5', 'bg-gold');
+                                d.classList.remove('w-2', 'bg-gold/30');
+                            } else {
+                                d.classList.remove('w-5', 'bg-gold');
+                                d.classList.add('w-2', 'bg-gold/30');
+                            }
+                        });
+                    }
+                };
+
+                grid.onscroll = updateCarouselIndicator;
+
+                if (prevBtn) {
+                    prevBtn.onclick = () => {
+                        const cards = grid.querySelectorAll('button.snap-center');
+                        if (!cards.length) return;
+                        const target = Math.max(0, currentIdx - 1);
+                        cards[target].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                    };
+                }
+                if (nextBtn) {
+                    nextBtn.onclick = () => {
+                        const cards = grid.querySelectorAll('button.snap-center');
+                        if (!cards.length) return;
+                        const target = Math.min(cards.length - 1, currentIdx + 1);
+                        cards[target].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                    };
+                }
             } catch (_) {}
         }
 
@@ -1941,15 +2187,22 @@
                     card.className = 'glass-card rounded-3xl p-5 sm:p-6';
 
                     const rowsHtml = svcs.map(s => `
-                        <button type="button" data-service-id="${escapeHtml(s.id)}"
-                            class="price-row-btn w-full text-left py-2.5 px-2 -mx-2 rounded-xl hover:bg-gold/10 transition flex items-end justify-between gap-1 group">
-                            <div class="min-w-0 pr-1">
-                                <span class="text-sm text-ivory group-hover:text-goldLight transition font-medium leading-snug block">${escapeHtml(s.name)}</span>
-                                <span class="text-[11px] text-muted">${formatDuration(s.duration)}</span>
-                            </div>
-                            <span class="price-dots"></span>
-                            <span class="font-serif text-xl sm:text-2xl font-semibold text-goldLight shrink-0 leading-none">${formatPrice(s.price)}</span>
-                        </button>
+                        <div class="py-2.5 px-2 -mx-2 rounded-xl hover:bg-gold/10 transition flex items-center justify-between gap-2 group">
+                            <button type="button" data-service-id="${escapeHtml(s.id)}"
+                                class="price-row-btn flex-1 min-w-0 text-left flex items-end justify-between gap-1">
+                                <div class="min-w-0 pr-1">
+                                    <span class="text-sm text-ivory group-hover:text-goldLight transition font-medium leading-snug block">${escapeHtml(s.name)}</span>
+                                    <span class="text-[11px] text-muted">${formatDuration(s.duration)}</span>
+                                </div>
+                                <span class="price-dots"></span>
+                                <span class="font-serif text-xl sm:text-2xl font-semibold text-goldLight shrink-0 leading-none">${formatPrice(s.price)}</span>
+                            </button>
+                            <button type="button" data-add-service-id="${escapeHtml(s.id)}"
+                                aria-label="Добавить в запись" title="Добавить в запись"
+                                class="price-add-btn shrink-0 w-7 h-7 rounded-full border border-gold/55 bg-gold/15 hover:bg-gold hover:text-obsidian text-goldLight text-sm font-bold flex items-center justify-center leading-none transition">
+                                +
+                            </button>
+                        </div>
                     `).join('');
 
                     card.innerHTML = `
@@ -1965,25 +2218,88 @@
                             selectServiceAndScroll(btn.dataset.serviceId);
                         });
                     });
+                    card.querySelectorAll('.price-add-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            selectServiceAndScroll(btn.dataset.addServiceId);
+                        });
+                    });
 
                     listWrap.appendChild(card);
                 });
             } catch (_) {}
         }
 
-        function selectServiceAndScroll(serviceId) {
-            ui.selectedServiceId = serviceId;
+        function getSelectedServices() {
+            const validIds = (ui.selectedServiceIds || []).filter(id =>
+                appState.services.some(s => s.id === id)
+            );
+            if (validIds.length > 0) {
+                return validIds.map(id => appState.services.find(s => s.id === id));
+            }
+            const fallback = appState.services.find(s => s.id === ui.selectedServiceId) || appState.services[0];
+            return fallback ? [fallback] : [];
+        }
+
+        function addServiceToBooking(serviceId) {
+            const found = appState.services.find(s => s.id === serviceId);
+            if (!found) return;
+            if (!Array.isArray(ui.selectedServiceIds)) ui.selectedServiceIds = [];
+            if (!ui.selectedServiceIds.includes(found.id)) {
+                ui.selectedServiceIds.push(found.id);
+            }
+            ui.selectedServiceId = found.id;
+            if (found.category) ui.bookingCategory = found.category;
             ui.selectedTime = '';
+        }
+
+        function toggleServiceInBooking(serviceId) {
+            const found = appState.services.find(s => s.id === serviceId);
+            if (!found) return;
+            const current = getSelectedServices();
+            const exists = current.some(s => s.id === serviceId);
+            if (exists) {
+                if (current.length <= 1) {
+                    showToast('Должна остаться хотя бы одна услуга');
+                    return;
+                }
+                ui.selectedServiceIds = current.map(s => s.id).filter(id => id !== serviceId);
+                ui.selectedServiceId = ui.selectedServiceIds[ui.selectedServiceIds.length - 1];
+            } else {
+                ui.selectedServiceIds = [...current.map(s => s.id), serviceId];
+                ui.selectedServiceId = serviceId;
+            }
+            if (found.category) ui.bookingCategory = found.category;
+            ui.selectedTime = '';
+            renderBookingSection();
+        }
+
+        function removeServiceFromBooking(serviceId) {
+            const current = getSelectedServices();
+            if (current.length <= 1) {
+                showToast('Должна остаться хотя бы одна услуга');
+                return;
+            }
+            ui.selectedServiceIds = current.map(s => s.id).filter(id => id !== serviceId);
+            ui.selectedServiceId = ui.selectedServiceIds[ui.selectedServiceIds.length - 1];
+            ui.selectedTime = '';
+            renderBookingSection();
+        }
+
+        function selectServiceAndScroll(serviceId) {
+            addServiceToBooking(serviceId);
             renderBookingSection();
             const bookingEl = document.getElementById('booking');
             if (bookingEl) bookingEl.scrollIntoView({ behavior: 'smooth' });
+            showToast('Услуга добавлена в запись');
         }
 
         // =========================================================================
         // 10. СТРОГИЙ ДВИЖОК РАСПИСАНИЯ И ОНЛАЙН-ЗАПИСЬ
         // =========================================================================
         function getSelectedService() {
-            return appState.services.find(s => s.id === ui.selectedServiceId) || appState.services[0];
+            const list = getSelectedServices();
+            return list[0] || appState.services[0];
         }
 
         function getAvailableSlotsForDate(isoDate, serviceDurationMin) {
@@ -2051,13 +2367,15 @@
         function renderBookingSection() {
             try {
                 const hintEl = document.getElementById('scheduleModeHint');
-                const selectEl = document.getElementById('bookingServiceSelect');
+                const catBtnsEl = document.getElementById('bookingCategoryButtons');
+                const svcBtnsEl = document.getElementById('bookingServiceButtons');
+                const chipsEl = document.getElementById('selectedServicesChips');
                 const metaEl = document.getElementById('bookingServiceMeta');
                 const dateStrip = document.getElementById('bookingDateStrip');
                 const dateLabel = document.getElementById('bookingDateLabel');
                 const timeGrid = document.getElementById('bookingTimeGrid');
 
-                if (!selectEl || !dateStrip || !timeGrid) return;
+                if (!catBtnsEl || !svcBtnsEl || !dateStrip || !timeGrid) return;
 
                 // Подсказка режима графика
                 if (hintEl) {
@@ -2068,46 +2386,115 @@
 
                 updateSelectedPromoBanner();
 
-                // 1. Выпадающий список услуг, сгруппированный по категориям
-                const currentSvc = getSelectedService();
-                if (currentSvc) ui.selectedServiceId = currentSvc.id;
+                // 1. Кнопки разделов -> кнопки услуг выбранного раздела (мультивыбор)
+                let selectedList = getSelectedServices();
+                ui.selectedServiceIds = selectedList.map(s => s.id);
+                const primarySvc = selectedList[0] || appState.services[0];
+                if (primarySvc) ui.selectedServiceId = primarySvc.id;
 
-                selectEl.innerHTML = '';
-                SERVICE_CATEGORIES.forEach(cat => {
-                    const svcs = appState.services.filter(s => s.category === cat);
-                    if (!svcs.length) return;
-                    const group = document.createElement('optgroup');
-                    group.label = cat;
-                    svcs.forEach(s => {
-                        const opt = document.createElement('option');
-                        opt.value = s.id;
-                        opt.textContent = `${s.name} — ${formatPrice(s.price)} (${formatDuration(s.duration)})`;
-                        if (s.id === ui.selectedServiceId) opt.selected = true;
-                        group.appendChild(opt);
-                    });
-                    selectEl.appendChild(group);
+                const availableCats = SERVICE_CATEGORIES.filter(cat =>
+                    appState.services.some(s => s.category === cat)
+                );
+                appState.services.forEach(s => {
+                    if (s.category && !availableCats.includes(s.category)) {
+                        availableCats.push(s.category);
+                    }
                 });
 
-                if (metaEl && currentSvc) {
-                    metaEl.innerHTML = `
-                        <span>Стоимость: <strong class="text-goldLight">${formatPrice(currentSvc.price)}</strong></span>
-                        <span>Длительность: <strong class="text-ivory">${formatDuration(currentSvc.duration)}</strong></span>
-                    `;
+                if (!ui.bookingCategory || !availableCats.includes(ui.bookingCategory)) {
+                    ui.bookingCategory = (primarySvc && primarySvc.category) || availableCats[0] || '';
                 }
 
-                // 2. Лента дат на 14 дней вперёд
+                catBtnsEl.innerHTML = '';
+                availableCats.forEach(cat => {
+                    const isActive = cat === ui.bookingCategory;
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = isActive
+                        ? 'px-3.5 py-2 rounded-full bg-gold text-obsidian text-xs font-bold shadow-md transition'
+                        : 'px-3.5 py-2 rounded-full border border-gold/30 bg-obsidian/90 text-ivory/85 hover:border-gold hover:text-goldLight text-xs font-medium transition';
+                    btn.textContent = cat;
+                    btn.addEventListener('click', () => {
+                        ui.bookingCategory = cat;
+                        renderBookingSection();
+                    });
+                    catBtnsEl.appendChild(btn);
+                });
+
+                const catSvcs = appState.services.filter(s => s.category === ui.bookingCategory);
+                svcBtnsEl.innerHTML = '';
+                catSvcs.forEach(s => {
+                    const isSel = ui.selectedServiceIds.includes(s.id);
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = isSel
+                        ? 'p-3 rounded-2xl border border-gold bg-gold/15 text-left transition flex items-center justify-between gap-2 shadow-[0_0_14px_rgba(230,194,122,0.16)]'
+                        : 'p-3 rounded-2xl border border-gold/25 bg-obsidian/85 hover:border-gold/60 text-left transition flex items-center justify-between gap-2';
+                    btn.innerHTML = `
+                        <div class="min-w-0 pr-1">
+                            <span class="block text-xs sm:text-sm ${isSel ? 'font-semibold text-goldLight' : 'font-medium text-ivory'} leading-snug">${escapeHtml(s.name)}</span>
+                            <span class="block text-[11px] ${isSel ? 'text-ivory/80' : 'text-muted'} mt-0.5">${formatDuration(s.duration)}</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <span class="font-serif text-lg font-semibold text-goldLight leading-none whitespace-nowrap">${formatPrice(s.price)}</span>
+                            <span class="w-5 h-5 rounded-full text-[11px] font-bold flex items-center justify-center shrink-0 ${isSel ? 'bg-gold text-obsidian' : 'border border-gold/35 text-goldLight'}">${isSel ? '✓' : '+'}</span>
+                        </div>
+                    `;
+                    btn.addEventListener('click', () => toggleServiceInBooking(s.id));
+                    svcBtnsEl.appendChild(btn);
+                });
+
+                if (chipsEl) {
+                    chipsEl.innerHTML = '';
+                    selectedList.forEach(s => {
+                        const chip = document.createElement('span');
+                        chip.className = 'inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gold/15 border border-gold/55 text-xs text-goldLight font-medium';
+                        chip.innerHTML = `
+                            <span>${escapeHtml(s.name)} · ${formatPrice(s.price)}</span>
+                            ${selectedList.length > 1
+                                ? `<button type="button" data-remove-svc="${escapeHtml(s.id)}" class="w-4 h-4 rounded-full bg-obsidian/80 text-ivory/80 hover:text-ivory text-[10px] flex items-center justify-center" title="Убрать">✕</button>`
+                                : ''}
+                        `;
+                        const rmBtn = chip.querySelector('[data-remove-svc]');
+                        if (rmBtn) {
+                            rmBtn.addEventListener('click', () => removeServiceFromBooking(s.id));
+                        }
+                        chipsEl.appendChild(chip);
+                    });
+                }
+
+                const totalDuration = selectedList.reduce((acc, s) => acc + (Number(s.duration) || 60), 0);
+
+                // 2. Лента дат на месяц вперёд (30 дней)
                 const today = new Date();
                 const dates = [];
-                for (let i = 0; i < 14; i++) {
+                for (let i = 0; i < 30; i++) {
                     const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
                     const iso = toIsoDate(d);
-                    const slots = getAvailableSlotsForDate(iso, currentSvc ? currentSvc.duration : 60);
+                    const slots = getAvailableSlotsForDate(iso, totalDuration || 60);
                     dates.push({ d, iso, slots });
                 }
 
                 if (!ui.selectedDate || !dates.some(x => x.iso === ui.selectedDate)) {
                     const firstAvail = dates.find(x => x.slots.length > 0);
                     ui.selectedDate = firstAvail ? firstAvail.iso : dates[0].iso;
+                }
+
+                const activeDateForPrice = ui.selectedDate || dates[0].iso;
+                const activeMarkup = getMarkupForDate(activeDateForPrice);
+                const effectiveTotalPrice = selectedList.reduce(
+                    (acc, s) => acc + getEffectivePrice(s.price, activeDateForPrice),
+                    0
+                );
+
+                if (metaEl && selectedList.length > 0) {
+                    const markupTag = activeMarkup
+                        ? ` · <span class="text-gold">${escapeHtml(activeMarkup.label)} (${activeMarkup.type === 'fixed' ? '+' + formatPrice(activeMarkup.value) : '+' + activeMarkup.value + '%'})</span>`
+                        : '';
+                    metaEl.innerHTML = `
+                        <span>Услуг: <strong class="text-ivory">${selectedList.length}</strong>${markupTag}</span>
+                        <span>Итого: <strong class="text-goldLight">${formatPrice(effectiveTotalPrice)}</strong> · <strong class="text-ivory">${formatDuration(totalDuration)}</strong></span>
+                    `;
                 }
 
                 dateStrip.innerHTML = '';
@@ -2458,6 +2845,43 @@
                 picker.value = toIsoDate(new Date());
             }
             renderOverrideForSelectedDate();
+
+            const mk = appState.holidayMarkup || {};
+            const mkEn = document.getElementById('cfgMarkupEnabled');
+            const mkSt = document.getElementById('cfgMarkupStart');
+            const mkEnd = document.getElementById('cfgMarkupEnd');
+            const mkTp = document.getElementById('cfgMarkupType');
+            const mkVl = document.getElementById('cfgMarkupValue');
+            const mkLb = document.getElementById('cfgMarkupLabel');
+            if (mkEn) mkEn.checked = Boolean(mk.enabled);
+            if (mkSt) mkSt.value = mk.startDate || '2026-12-20';
+            if (mkEnd) mkEnd.value = mk.endDate || '2026-12-31';
+            if (mkTp) mkTp.value = mk.type === 'fixed' ? 'fixed' : 'percent';
+            if (mkVl) mkVl.value = mk.value ?? 15;
+            if (mkLb) mkLb.value = mk.label || 'Предновогодний тариф';
+        }
+
+        function saveHolidayMarkupConfig() {
+            const mkEn = document.getElementById('cfgMarkupEnabled');
+            const mkSt = document.getElementById('cfgMarkupStart');
+            const mkEnd = document.getElementById('cfgMarkupEnd');
+            const mkTp = document.getElementById('cfgMarkupType');
+            const mkVl = document.getElementById('cfgMarkupValue');
+            const mkLb = document.getElementById('cfgMarkupLabel');
+
+            appState.holidayMarkup = {
+                enabled: mkEn ? Boolean(mkEn.checked) : false,
+                startDate: (mkSt && mkSt.value) || '2026-12-20',
+                endDate: (mkEnd && mkEnd.value) || '2026-12-31',
+                type: (mkTp && mkTp.value === 'fixed') ? 'fixed' : 'percent',
+                value: Math.max(0, Number(mkVl && mkVl.value) || 0),
+                label: (mkLb && mkLb.value.trim()) || 'Предновогодний тариф'
+            };
+
+            saveLocalState();
+            syncStateToRemote();
+            renderBookingSection();
+            showToast('Настройки автонаценки сохранены');
         }
 
         function saveWorkingHoursConfig() {
@@ -2749,30 +3173,50 @@
             });
         }
 
+        function updatePortfolioPreviewTransform() {
+            const prevImg = document.getElementById('portUploadPreviewImg');
+            if (!prevImg) return;
+            if (ui.pendingPortfolioImage) prevImg.src = ui.pendingPortfolioImage;
+            prevImg.style.transform = `rotate(${ui.pendingPortfolioRotation || 0}deg)`;
+        }
+
+        function rotatePendingPortfolioPhoto() {
+            if (!ui.pendingPortfolioImage) return;
+            ui.pendingPortfolioRotation = ((Number(ui.pendingPortfolioRotation) || 0) + 90) % 360;
+            updatePortfolioPreviewTransform();
+        }
+
         function addPortfolioItem() {
             const category = document.getElementById('portCatInput').value;
             const caption = document.getElementById('portCaptionInput').value.trim() || category;
             if (!ui.pendingPortfolioImage) return showToast('Сначала выберите фото из галереи');
 
-            appState.portfolio.unshift({
-                id: 'pt_' + Date.now(),
-                category,
-                caption,
-                image: ui.pendingPortfolioImage,
-                icon: 'lashes'
-            });
+            const finalizePublish = (finalImage) => {
+                appState.portfolio.unshift({
+                    id: 'pt_' + Date.now(),
+                    category,
+                    caption,
+                    image: finalImage,
+                    icon: 'lashes'
+                });
 
-            ui.pendingPortfolioImage = '';
-            document.getElementById('portCaptionInput').value = '';
-            document.getElementById('portUploadPreviewWrap').classList.add('hidden');
-            document.getElementById('portUploadPreviewWrap').classList.remove('flex');
-            document.getElementById('portFileLabel').textContent = 'Выбрать фото из галереи';
+                ui.pendingPortfolioImage = '';
+                ui.pendingPortfolioRotation = 0;
+                const prevImg = document.getElementById('portUploadPreviewImg');
+                if (prevImg) prevImg.style.transform = 'rotate(0deg)';
+                document.getElementById('portCaptionInput').value = '';
+                document.getElementById('portUploadPreviewWrap').classList.add('hidden');
+                document.getElementById('portUploadPreviewWrap').classList.remove('flex');
+                document.getElementById('portFileLabel').textContent = 'Выбрать фото из галереи';
 
-            saveLocalState();
-            syncStateToRemote();
-            renderAdminPortfolio();
-            renderPortfolio();
-            showToast('Работа добавлена в портфолио');
+                saveLocalState();
+                syncStateToRemote();
+                renderAdminPortfolio();
+                renderPortfolio();
+                showToast('Работа добавлена в портфолио');
+            };
+
+            rotateDataUrl(ui.pendingPortfolioImage, ui.pendingPortfolioRotation, finalizePublish);
         }
 
         function deletePortfolioItem(id) {
@@ -2873,16 +3317,6 @@
         // 13. ИНИЦИАЛИЗАЦИЯ ВСЕХ СОБЫТИЙ И ЗАПУСК
         // =========================================================================
         function bindEvents() {
-            // Выбор услуги в форме записи
-            const svcSelect = document.getElementById('bookingServiceSelect');
-            if (svcSelect) {
-                svcSelect.addEventListener('change', (e) => {
-                    ui.selectedServiceId = e.target.value;
-                    ui.selectedTime = '';
-                    renderBookingSection();
-                });
-            }
-
             // Маска телефона
             const phoneInput = document.getElementById('clientPhone');
             if (phoneInput) {
@@ -2904,12 +3338,25 @@
                     };
                     if (errEl) errEl.classList.add('hidden');
 
-                    const svc = getSelectedService();
+                    const selectedList = getSelectedServices();
+                    const svc = selectedList[0];
+                    const combinedServiceName = selectedList.map(s => s.name).join(' + ');
+                    const combinedPrice = selectedList.reduce(
+                        (acc, s) => acc + getEffectivePrice(s.price, ui.selectedDate),
+                        0
+                    );
+                    const combinedDuration = selectedList.reduce((acc, s) => acc + (Number(s.duration) || 60), 0);
+
                     const name = (document.getElementById('clientName').value || '').trim();
                     const phone = (document.getElementById('clientPhone').value || '').trim();
-                    const comment = (document.getElementById('clientComment').value || '').trim();
+                    const rawComment = (document.getElementById('clientComment').value || '').trim();
+                    const activeMk = getMarkupForDate(ui.selectedDate);
+                    const markupNote = activeMk
+                        ? `${activeMk.label} (${activeMk.type === 'fixed' ? '+' + formatPrice(activeMk.value) : '+' + activeMk.value + '%'})`
+                        : '';
+                    const comment = [markupNote, rawComment].filter(Boolean).join(' · ');
 
-                    if (!svc) return showErr('Выберите услугу.');
+                    if (!svc || selectedList.length === 0) return showErr('Выберите услугу.');
                     if (!ui.selectedDate) return showErr('Выберите дату визита.');
                     if (!ui.selectedTime) return showErr('Выберите свободное время.');
                     if (name.length < 2) return showErr('Укажите ваше имя.');
@@ -2919,10 +3366,10 @@
                         id: 'bk_' + Date.now(),
                         date: ui.selectedDate,
                         time: ui.selectedTime,
-                        serviceId: svc.id,
-                        serviceName: svc.name,
-                        price: svc.price,
-                        duration: svc.duration,
+                        serviceId: selectedList.map(s => s.id).join(','),
+                        serviceName: combinedServiceName,
+                        price: combinedPrice,
+                        duration: combinedDuration,
                         clientName: name,
                         clientPhone: phone,
                         promo: ui.selectedPromoText || '',
@@ -2931,7 +3378,17 @@
 
                     appState.bookings.push(booking);
                     saveLocalState();
-                    postToRemote({ action: 'booking', booking });
+                    const { syncUrl, ...dataToSync } = appState;
+                    postToRemote({
+                        action: 'booking',
+                        data: dataToSync,
+                        booking: {
+                            ...booking,
+                            service: combinedServiceName,
+                            name: name,
+                            phone: phone
+                        }
+                    });
 
                     lastCreatedBooking = booking;
                     const details = document.getElementById('successBookingDetails');
@@ -3024,10 +3481,10 @@
                     if (!file) return;
                     compressImageFile(file, 900, 0.78, (dataUrl) => {
                         ui.pendingPortfolioImage = dataUrl;
-                        const prevImg = document.getElementById('portUploadPreviewImg');
+                        ui.pendingPortfolioRotation = 0;
+                        updatePortfolioPreviewTransform();
                         const prevWrap = document.getElementById('portUploadPreviewWrap');
                         const label = document.getElementById('portFileLabel');
-                        if (prevImg) prevImg.src = dataUrl;
                         if (prevWrap) {
                             prevWrap.classList.remove('hidden');
                             prevWrap.classList.add('flex');
@@ -3087,24 +3544,73 @@
             });
         }
 
-        function renderAll() {
-            applyHeroAppearance();
-            renderPromos();
-            renderPortfolio();
-            renderPriceList();
-            renderBookingSection();
-            renderReviews();
+        function ensureNonEmptyCollections() {
+            const def = getDefaultState();
+            if (!Array.isArray(appState.services) || appState.services.length === 0) {
+                appState.services = def.services;
+            }
+            if (!Array.isArray(appState.promos) || appState.promos.length === 0) {
+                appState.promos = def.promos;
+            }
+            if (!Array.isArray(appState.portfolio) || appState.portfolio.length === 0) {
+                appState.portfolio = def.portfolio;
+            }
+            if (!Array.isArray(appState.reviews) || appState.reviews.length === 0) {
+                appState.reviews = def.reviews;
+            }
+            if (!Array.isArray(appState.bookings)) {
+                appState.bookings = [];
+            }
+            if (!appState.schedule || typeof appState.schedule !== 'object') {
+                appState.schedule = def.schedule;
+            }
+            if (!appState.hero || typeof appState.hero !== 'object') {
+                appState.hero = def.hero;
+            }
         }
 
-        // Немедленный запуск и отрисовка ДО сетевого запроса
-        document.addEventListener('DOMContentLoaded', () => {
-            initSparkles();
-            loadLocalState();
-            bindEvents();
-            renderAll();
-            initScrollSpy();
-            // Фоновая безопасная синхронизация с Google Apps Script
-            fetchRemoteData(true);
+        function renderAll() {
+            ensureNonEmptyCollections();
+            try { applyHeroAppearance(); } catch (_) {}
+            try { renderPromos(); } catch (_) {}
+            try { renderPortfolio(); } catch (_) {}
+            try { renderPriceList(); } catch (_) {}
+            try { renderBookingSection(); } catch (_) {}
+            try { renderReviews(); } catch (_) {}
+        }
+
+
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.openPinModal = openPinModal;
+        window.openAdminCabinet = openAdminCabinet;
+        window.switchAdminTab = switchAdminTab;
+        window.setScheduleMode = setScheduleMode;
+        window.openReviewModal = openReviewModal;
+        window.clearSelectedPromo = clearSelectedPromo;
+
+        let __belAppBooted = false;
+        function bootBelApp() {
+            if (__belAppBooted) return;
+            __belAppBooted = true;
+            try { initSparkles(); } catch (_) {}
+            try { loadLocalState(); } catch (_) { appState = getDefaultState(); }
+            try { bindEvents(); } catch (_) {}
+            try { renderAll(); } catch (_) {}
+            try { initScrollSpy(); } catch (_) {}
+            try { fetchRemoteData(true); } catch (_) {}
+        }
+
+        if (document.readyState === 'interactive' || document.readyState === 'complete') {
+            bootBelApp();
+        } else {
+            document.addEventListener('DOMContentLoaded', bootBelApp);
+        }
+        window.addEventListener('load', () => {
+            if (!__belAppBooted) bootBelApp();
+            else {
+                try { renderAll(); } catch (_) {}
+            }
         });
     </script>
 </body>
