@@ -1676,29 +1676,21 @@
             }
         }
 
-        // POST-запрос: надёжная отправка в Google Apps Script с обходом блокировок редиректа/кэша
+        // POST-запрос: отправляем лёгкий payload без тяжёлых base64-фото + без обрыва таймаутом
         async function postToRemote(payload) {
             const url = getActiveSyncUrl();
             if (!url || typeof fetch !== 'function') return false;
-            const bodyStr = JSON.stringify(payload);
             try {
                 await fetchWithTimeout(url, {
                     method: 'POST',
                     mode: 'no-cors',
                     credentials: 'omit',
-                    cache: 'no-store',
                     redirect: 'follow',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: bodyStr
-                }, 7000);
+                    body: JSON.stringify(payload)
+                }, 12000);
                 return true;
             } catch (_) {
-                try {
-                    if (navigator.sendBeacon) {
-                        const blob = new Blob([bodyStr], { type: 'text/plain;charset=utf-8' });
-                        if (navigator.sendBeacon(url, blob)) return true;
-                    }
-                } catch (__) {}
                 return false;
             }
         }
@@ -3339,7 +3331,7 @@
             // Отправка формы онлайн-записи
             const bookingForm = document.getElementById('bookingForm');
             if (bookingForm) {
-                bookingForm.addEventListener('submit', async (e) => {
+                bookingForm.addEventListener('submit', (e) => {
                     e.preventDefault();
                     const errEl = document.getElementById('bookingError');
                     const showErr = (msg) => {
@@ -3389,10 +3381,11 @@
 
                     appState.bookings.push(booking);
                     saveLocalState();
-                    const { syncUrl, ...dataToSync } = appState;
-                    await postToRemote({
+                    const { syncUrl, hero, portfolio, ...lightData } = appState;
+                    const lightPortfolio = (portfolio || []).map(({ image, ...rest }) => rest);
+                    postToRemote({
                         action: 'booking',
-                        data: dataToSync,
+                        data: { ...lightData, portfolio: lightPortfolio },
                         booking: {
                             ...booking,
                             service: combinedServiceName,
