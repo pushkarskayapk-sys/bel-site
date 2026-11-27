@@ -48,11 +48,10 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Золотой металлический градиент для заголовков */
+        /* Яркий читаемый золотой цвет для заголовков и акцентов */
         .text-gold-gradient {
-            background: linear-gradient(135deg, #FFF5DB 0%, #F5D996 32%, #E6C27A 65%, #C9A050 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #F5D996;
+            -webkit-text-fill-color: #F5D996;
         }
 
         /* Главная золотая кнопка с мягким бликом */
@@ -98,9 +97,9 @@
         .promo-vip-card {
             position: relative;
             overflow: hidden;
-            background: linear-gradient(145deg, #5A4018 0%, #2B1E0C 46%, #4A3413 100%);
+            background: linear-gradient(145deg, #3A2A12 0%, #1C1409 50%, #31230E 100%);
             border: 1.5px solid #F5D996;
-            box-shadow: 0 16px 40px rgba(230, 194, 122, 0.26), inset 0 1px 0 rgba(255, 245, 219, 0.45);
+            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
         }
         .promo-vip-card::before {
             content: '';
@@ -399,7 +398,7 @@
                     <h2 class="font-serif text-3xl sm:text-5xl font-semibold text-gold-gradient leading-tight">
                         Акции и спецпредложения
                     </h2>
-                    <p class="text-xs text-muted mt-1.5">Нажмите «Воспользоваться» — откроется диалог в VK для согласования дат и деталей</p>
+                    <p class="text-xs text-[#D6CBB9] mt-1.5">Нажмите «Воспользоваться» — откроется диалог в VK для согласования дат и деталей</p>
                 </div>
 
                 <div id="promosContainer" class="flex gap-[14px] overflow-x-auto snap-x snap-mandatory no-scrollbar pb-2 -mx-4 px-4 sm:mx-0 sm:px-0"></div>
@@ -1676,7 +1675,7 @@
             }
         }
 
-        // POST-запрос: отправляем лёгкий payload без тяжёлых base64-фото + без обрыва таймаутом
+        // POST-запрос: лёгкая отправка в Google Apps Script без обрыва таймаутом
         async function postToRemote(payload) {
             const url = getActiveSyncUrl();
             if (!url || typeof fetch !== 'function') return false;
@@ -1862,7 +1861,7 @@
                                 <span class="text-gold text-xs">✦</span>
                             </div>
 
-                            <h3 class="font-serif text-2xl sm:text-[26px] font-semibold text-[#FFF5DB] leading-snug">
+                            <h3 class="font-serif text-2xl sm:text-[26px] font-semibold text-[#FFF6DF] leading-snug">
                                 ${escapeHtml(promo.title)}
                             </h3>
 
