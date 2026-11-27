@@ -399,7 +399,7 @@
                     <h2 class="font-serif text-3xl sm:text-5xl font-semibold text-gold-gradient leading-tight">
                         Акции и спецпредложения
                     </h2>
-                    <p class="text-xs text-muted mt-1.5">Нажмите на предложение — акция сразу закрепится за вашей записью</p>
+                    <p class="text-xs text-muted mt-1.5">Нажмите «Воспользоваться» — откроется диалог в VK для согласования дат и деталей</p>
                 </div>
 
                 <div id="promosContainer" class="flex gap-[14px] overflow-x-auto snap-x snap-mandatory no-scrollbar pb-2 -mx-4 px-4 sm:mx-0 sm:px-0"></div>
@@ -620,7 +620,7 @@
 
                         <span class="hidden sm:block w-px h-7 bg-gold/30 mx-2"></span>
 
-                        <a href="https://vk.com/elzida_berdykaeva74" target="_blank" rel="noopener noreferrer"
+                        <a href="https://vk.me/elzida_berdykaeva74" target="_blank" rel="noopener noreferrer"
                            class="flex items-center gap-3 px-4 py-1 text-ivory hover:text-goldLight transition group">
                             <span class="w-9 h-9 rounded-xl bg-gold text-obsidian font-bold text-xs flex items-center justify-center group-hover:brightness-110 transition shrink-0">
                                 VK
@@ -696,7 +696,7 @@
                     </svg>
                     Добавить в календарь (.ics)
                 </button>
-                <a href="https://vk.com/elzida_berdykaeva74" target="_blank" rel="noopener noreferrer"
+                <a href="https://vk.me/elzida_berdykaeva74" target="_blank" rel="noopener noreferrer"
                     class="w-full py-3 px-4 rounded-2xl border border-gold/45 bg-cardSoft hover:bg-gold/15 text-goldLight text-xs font-semibold flex items-center justify-center gap-2 transition">
                     Написать мастеру в VK
                 </a>
@@ -1676,16 +1676,18 @@
             }
         }
 
-        // POST-запрос (text/plain обходит CORS preflight в Google Apps Script)
+        // POST-запрос (no-cors + text/plain + keepalive для надёжной доставки в Google Apps Script)
         async function postToRemote(payload) {
             const url = getActiveSyncUrl();
             if (!url || typeof fetch !== 'function') return false;
             try {
                 await fetchWithTimeout(url, {
                     method: 'POST',
+                    mode: 'no-cors',
+                    keepalive: true,
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
-                }, 4000);
+                }, 8000);
                 return true;
             } catch (_) {
                 return false;
@@ -1859,17 +1861,17 @@
                                 <span class="text-gold text-xs">✦</span>
                             </div>
 
-                            <h3 class="font-serif text-2xl sm:text-[26px] font-semibold text-goldLight leading-snug">
+                            <h3 class="font-serif text-2xl sm:text-[26px] font-semibold text-[#FFF5DB] leading-snug">
                                 ${escapeHtml(promo.title)}
                             </h3>
 
                             ${promo.highlight ? `
-                                <p class="font-serif text-xl sm:text-2xl font-bold text-gold-gradient leading-tight">
+                                <p class="font-serif text-xl sm:text-2xl font-bold text-[#F5D996] leading-tight">
                                     ${escapeHtml(promo.highlight)}
                                 </p>
                             ` : ''}
 
-                            <p class="text-xs text-ivory/85 leading-relaxed">
+                            <p class="text-xs text-[#F7F2EA] leading-relaxed">
                                 ${escapeHtml(promo.desc)}
                             </p>
                         </div>
@@ -1882,7 +1884,11 @@
 
                     const btn = card.querySelector('button');
                     if (btn) {
-                        btn.addEventListener('click', () => applyPromoToBooking(promo));
+                        btn.addEventListener('click', () => {
+                            const vkUrl = 'https://vk.me/elzida_berdykaeva74';
+                            const w = window.open(vkUrl, '_blank', 'noopener,noreferrer');
+                            if (!w) window.location.href = vkUrl;
+                        });
                     }
                     container.appendChild(card);
 
@@ -3388,7 +3394,7 @@
                             name: name,
                             phone: phone
                         }
-                    });
+                    }).catch(() => {});
 
                     lastCreatedBooking = booking;
                     const details = document.getElementById('successBookingDetails');
