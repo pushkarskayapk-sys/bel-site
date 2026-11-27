@@ -1676,20 +1676,29 @@
             }
         }
 
-        // POST-запрос (no-cors + text/plain + keepalive для надёжной доставки в Google Apps Script)
+        // POST-запрос: надёжная отправка в Google Apps Script с обходом блокировок редиректа/кэша
         async function postToRemote(payload) {
             const url = getActiveSyncUrl();
             if (!url || typeof fetch !== 'function') return false;
+            const bodyStr = JSON.stringify(payload);
             try {
                 await fetchWithTimeout(url, {
                     method: 'POST',
                     mode: 'no-cors',
-                    keepalive: true,
+                    credentials: 'omit',
+                    cache: 'no-store',
+                    redirect: 'follow',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(payload)
-                }, 8000);
+                    body: bodyStr
+                }, 7000);
                 return true;
             } catch (_) {
+                try {
+                    if (navigator.sendBeacon) {
+                        const blob = new Blob([bodyStr], { type: 'text/plain;charset=utf-8' });
+                        if (navigator.sendBeacon(url, blob)) return true;
+                    }
+                } catch (__) {}
                 return false;
             }
         }
@@ -1884,11 +1893,7 @@
 
                     const btn = card.querySelector('button');
                     if (btn) {
-                        btn.addEventListener('click', () => {
-                            const vkUrl = 'https://vk.me/elzida_berdykaeva74';
-                            const w = window.open(vkUrl, '_blank', 'noopener,noreferrer');
-                            if (!w) window.location.href = vkUrl;
-                        });
+                        btn.addEventListener('click', () => { const vkUrl = 'https://vk.me/elzida_berdykaeva74'; const w = window.open(vkUrl, '_blank', 'noopener,noreferrer'); if (!w) window.location.href = vkUrl; });
                     }
                     container.appendChild(card);
 
@@ -3334,7 +3339,7 @@
             // Отправка формы онлайн-записи
             const bookingForm = document.getElementById('bookingForm');
             if (bookingForm) {
-                bookingForm.addEventListener('submit', (e) => {
+                bookingForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
                     const errEl = document.getElementById('bookingError');
                     const showErr = (msg) => {
@@ -3385,7 +3390,7 @@
                     appState.bookings.push(booking);
                     saveLocalState();
                     const { syncUrl, ...dataToSync } = appState;
-                    postToRemote({
+                    await postToRemote({
                         action: 'booking',
                         data: dataToSync,
                         booking: {
@@ -3394,7 +3399,7 @@
                             name: name,
                             phone: phone
                         }
-                    }).catch(() => {});
+                    });
 
                     lastCreatedBooking = booking;
                     const details = document.getElementById('successBookingDetails');
